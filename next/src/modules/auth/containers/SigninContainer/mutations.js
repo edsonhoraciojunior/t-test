@@ -17,3 +17,12 @@ export const registerMutation = gql`
     }
   }
 `
+
+export const logoutMutation = gql`
+  mutation UserLogout($name: String!) {
+    user: userLogout (name: $name) {
+      uid
+      name
+    }
+  }
+`
