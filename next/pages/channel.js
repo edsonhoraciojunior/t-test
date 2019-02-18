@@ -61,7 +61,7 @@ import MessagesContainer from 'app/modules/channel/containers/MessagesContainer'
 import NewMessageContainer from 'app/modules/channel/containers/NewMessageContainer'
 import NewChannelContainer from 'app/modules/channel/containers/NewChannelContainer'
 
-const ChatRoom = ({ url, url: { query: { channel = 'general' } } }) => (
+const ChatRoom = ({ url, url: { query: { channel } } }) => (
   <CurrentUserContainer>
     { ({ user }) => (
       <ChannelsContainer>
@@ -90,7 +90,9 @@ const ChatRoom = ({ url, url: { query: { channel = 'general' } } }) => (
                   <Box flex='grow' justify='start'>
                     <Menu primary>
                       { channels.map(({ name }) => (
-                        <Link key={ name } prefetch href={ `/messages/${name}` }>
+                        <Link key={ name } prefetch 
+                          as={ `/messages/${name}` } 
+                          href={ `/messages/general?channel=${name}` }>
                           <Anchor className={ channel === name ? 'active' : '' }>
                             # <b>{ name }</b>
                           </Anchor>
