@@ -60,6 +60,30 @@ import ChannelsContainer from 'app/modules/channel/containers/ChannelsContainer'
 import MessagesContainer from 'app/modules/channel/containers/MessagesContainer'
 import NewMessageContainer from 'app/modules/channel/containers/NewMessageContainer'
 import NewChannelContainer from 'app/modules/channel/containers/NewChannelContainer'
+import { Mutation } from 'react-apollo'
+import Router from 'next/router'
+import { logoutMutation } from 'app/modules/auth/containers/SigninContainer/mutations'
+
+/**
+ * Grab actual error from GraphQL error.
+ */
+const normalizeError = err => err.graphQLErrors ? err.graphQLErrors[0].message : err.message
+
+/**
+ * Redirect when registered/logged in.
+ */
+const redirect = () => {
+  Router.push('/index')
+  return undefined
+}
+
+/**
+ * Submit handler: switch between register and login based on form values.
+ */
+const handleSubmit = ({ logout }) => variables =>
+  (logout)({ variables })
+    .then(redirect)
+    .catch(normalizeError)
 
 const ChatRoom = ({ url, url: { query: { channel = 'general' } } }) => (
   <CurrentUserContainer>
@@ -101,7 +125,14 @@ const ChatRoom = ({ url, url: { query: { channel = 'general' } } }) => (
 
                   <Footer pad='medium'>
                     <Button icon={ <UserIcon /> } onClick={ console.log } />
-                    <Button icon={ <LogoutIcon /> } onClick={ console.log } />
+                    
+                    <Mutation mutation={ logoutMutation }>
+                      { logout => (
+                        <Button icon={ <LogoutIcon /> } 
+                          onClick={ handleSubmit({ logout }) } />
+                      ) }
+                    </Mutation>
+                    
                   </Footer>
                 </Sidebar>
 
